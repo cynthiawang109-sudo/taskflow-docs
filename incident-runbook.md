@@ -5,12 +5,12 @@
 1. Check the `api-service` health endpoint (contract in `taskflow-api-docs`).
 2. If health is `degraded` with `db: down`, check PostgreSQL primary status
    before restarting anything — restarts do not fix a down database.
-3. If health is `degraded` with `task_store: down`, the api-service's own
-   task store failed its self-check — the process itself is broken, not a
-   downstream dependency. Restart the api-service process (its in-memory
-   demo data is lost on restart by design). If it recurs after a restart,
-   capture the logs and treat it as a code defect: roll back the last
-   deploy.
+3. If health is `degraded` with `task_store: down`, the api-service cannot
+   reach its task store. Restart the api-service process. Task data lives
+   in a local SQLite file and survives a restart; if health is still
+   degraded afterwards, check that the database file (TASKFLOW_DB_PATH)
+   exists and is readable before treating it as a code defect: roll back
+   the last deploy.
 4. If a deploy landed in the last 30 minutes, roll back first, investigate
    second (see `deployment.md`).
 
