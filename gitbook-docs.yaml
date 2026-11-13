@@ -1,0 +1,12 @@
+$schema: https://api.gitbook.com/gitbook-docs.yaml
+
+site:
+  title: TaskFlow Docs
+  structure:
+    - type: space
+      key: taskflow-docs
+      title: TaskFlow Docs
+      path: taskflow-docs
+      default: true
+      content:
+        directory: ./
