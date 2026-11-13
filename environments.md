@@ -11,15 +11,14 @@ where.
 | Snapshot refresh | On demand (`make seed`) | Monthly, as a restore drill | — |
 | Secrets | Local file outside the repo | Secrets manager, staging scope | Secrets manager, prod scope |
 | Who can deploy | The developer | Any engineer | Manual pipeline approval (`deployment.md`) |
-| Direct DB writes | Yes | Migrations only | Migrations only |
+| Direct DB writes | Via the local `api-service` (seed tooling) | Migrations only | Migrations only |
 
 ## Data rules
 
 - Production data never enters `dev`. Debugging against real data
   happens in `prod` tooling with user IDs, or not at all.
 - Anonymization for `staging` rewrites every `users.email` to a
-  `@example.invalid` address and re-keys display names, before the
-  snapshot is usable. Email remains the only PII column, so it is the
+  `@example.invalid` address before the snapshot is usable. Email remains the only PII column, so it is the
   only column the anonymizer touches.
 - `staging` sends no real email: the worker's mail sink is a local
   outbox file, the same pattern the demo implementation uses.

@@ -40,7 +40,8 @@ request, on top of the identities established here.
   boundary in `system-overview.md`); it authenticates to the PostgreSQL
   read-replica and to Redis with per-service credentials from the
   secrets manager (see `security.md`).
-- The only unauthenticated endpoint anywhere is `GET /health`, which by
+- Apart from the login and password-reset endpoints themselves, the
+  only unauthenticated endpoint is `GET /health`, which by
   contract reveals nothing beyond check names
   (see `taskflow-api-docs`, `api-conventions.md`).
 

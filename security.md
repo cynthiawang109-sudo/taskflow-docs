@@ -32,8 +32,9 @@ side silently.
 ## Application rules
 
 - All input is validated at the `api-service` boundary. Validation
-  failures return `422` with code `validation_error`, and error
-  messages never echo submitted values back to the caller
+  failures return `422` — code `validation_error`, or a more specific
+  code where the catalog assigns one (for example `invalid_status`) —
+  and error messages never echo submitted values back to the caller
   (see `taskflow-api-docs`, `errors.md`).
 - Rate limiting is enforced per credential class
   (see `taskflow-api-docs`, `rate-limiting.md`).

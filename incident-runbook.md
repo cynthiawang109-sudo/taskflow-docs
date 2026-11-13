@@ -15,8 +15,10 @@
 2. If health is `degraded` with `db: down`, check PostgreSQL primary status
    before restarting anything — restarts do not fix a down database.
 3. If health is `degraded` with `task_store: down`, the api-service cannot
-   reach its task store. Restart the api-service process. Task data lives
-   in a local SQLite file and survives a restart; if health is still
+   reach its task store. In production that store is PostgreSQL: check
+   connectivity and credentials before restarting anything. In the demo
+   implementation the store is a local SQLite file: restart the
+   api-service process (the data survives a restart); if health is still
    degraded afterwards, check that the database file (TASKFLOW_DB_PATH)
    exists and is readable before treating it as a code defect: roll back
    the last deploy.
