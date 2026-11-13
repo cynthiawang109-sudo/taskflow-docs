@@ -19,9 +19,11 @@ the boundaries sit where they do.
   PII: the worker resolves what it needs (for example a digest
   recipient's email) from the database read-replica at run time.
 - A failed job retries with exponential backoff and lands in a
-  dead-letter list after 5 attempts (see `incident-runbook.md`).
+  dead-letter list after 3 attempts (see `incident-runbook.md`).
 - Report generation reads the read-replica, never the primary, so a
   heavy report cannot starve the request path.
+
+Presence tuning and capacity numbers live in `scaling.md`.
 
 ## Realtime board presence
 
