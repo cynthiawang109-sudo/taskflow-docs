@@ -15,6 +15,13 @@ All content is original and fictional.
 | `system-overview.md` | Components, data flow, and the boundaries between services |
 | `deployment.md` | Environments, release mechanics, rollback |
 | `incident-runbook.md` | First-response steps for the common failure modes |
+| `architecture.md` | Request lifecycle, async work, scaling, failure domains |
+| `authentication.md` | Sessions, API tokens, service-to-service auth, admin MFA |
+| `observability.md` | Logs, metrics, traces, and the alerts that page |
+| `security.md` | PII rules, secrets, dependency policy, review requirements |
+| `environments.md` | Per-environment data, secrets, and access rules |
+| `backup-and-recovery.md` | PostgreSQL backups, PITR, restore drills |
+| `adr/` | Architecture decision records (PostgreSQL, cursor pagination, RQ) |
 
 API-level contracts (endpoints, payloads, data model) live in the sibling
 repo `taskflow-api-docs`.

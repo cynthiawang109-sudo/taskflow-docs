@@ -1,5 +1,14 @@
 # TaskFlow — incident runbook (first response)
 
+## Severity levels
+
+| Sev | Meaning | Examples | Response |
+|---|---|---|---|
+| 1 | Data risk or full outage | PII found in logs; API 5xx across the board | Page on-call; post comms every 30 minutes |
+| 2 | A major function is degraded | Worker queue stalled; `/health` degraded on one dependency | Page on-call; post comms hourly |
+| 3 | Minor or partial impact | One digest batch dead-lettered; a failed restore drill | Ticket; next business day |
+
+
 ## API returning 5xx across the board
 
 1. Check the `api-service` health endpoint (contract in `taskflow-api-docs`).
@@ -47,3 +56,19 @@ database (`TASKFLOW_DB_PATH`).
 1. Stop the affected service's log shipping first, then rotate its tokens.
 2. Search shipped logs for email patterns; PII in logs is a severity-1 by
    policy (see `system-overview.md`, "Boundaries and rules").
+
+## Communications template
+
+Post updates in the incident ticket and the status channel, on the
+cadence the severity demands:
+
+```
+Status: investigating | identified | monitoring | resolved
+Impact: <who and what is affected, in user terms>
+Since: <UTC time the impact started>
+Next update: <time; at most 30 minutes out for severity 1>
+```
+
+Refer to users by ID only, never by email (see `security.md`), and
+keep the wording blameless: what happened, what it affects, what
+happens next.
