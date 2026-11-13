@@ -16,6 +16,10 @@ Hard checks (exit 1 on any failure):
      README.md (by name, or by its top-level directory, e.g. `adr/`),
      and every backticked `.md`/`.yaml` filename in README.md exists.
 
+Platform files are not corpus pages: anything under a `.github/`
+directory and a root-level `SECURITY.md` are ignored by every
+check (GitHub reads them; GitBook does not publish them).
+
 Soft check (report only, unless --strict-external):
   4. External links - every http(s) URL answers with a 2xx/3xx status.
 
@@ -62,7 +66,13 @@ def heading_slugs(path):
 
 
 def md_files(base):
-    return sorted(p for p in base.rglob("*.md") if ".git" not in p.parts)
+    return sorted(
+        p
+        for p in base.rglob("*.md")
+        if ".git" not in p.parts
+        and ".github" not in p.parts
+        and not (p.name == "SECURITY.md" and p.parent == ROOT)
+    )
 
 
 def find_spaces():
