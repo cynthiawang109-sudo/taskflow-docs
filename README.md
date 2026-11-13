@@ -1,5 +1,6 @@
 # taskflow-docs
 
+[![docs-ci](https://github.com/cynthiawang109-sudo/taskflow-docs/actions/workflows/docs-ci.yml/badge.svg)](https://github.com/cynthiawang109-sudo/taskflow-docs/actions/workflows/docs-ci.yml)
 System documentation for **TaskFlow**, a fictional project-management SaaS.
 This repository is the source of truth for how TaskFlow is built and operated;
 other workspace projects (code-reviewer, release-assistant) read it but never
