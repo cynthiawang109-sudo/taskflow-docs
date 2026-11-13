@@ -71,7 +71,7 @@ def md_files(base):
         for p in base.rglob("*.md")
         if ".git" not in p.parts
         and ".github" not in p.parts
-        and p.resolve() != (ROOT / "SECURITY.md").resolve()
+        and not (p.name == "SECURITY.md" and p.parent == ROOT)
     )
 
 
