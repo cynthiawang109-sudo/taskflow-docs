@@ -42,3 +42,18 @@ never email addresses — PII in logs is a severity-1 incident
 
 Every paging alert names its runbook section. An alert without a
 runbook entry is a review finding, not a nuisance to silence.
+
+## Demo implementation note
+
+The demo implementation (demo-app) covers the Logs slice of this
+page: one structured JSON line per request to stdout with `ts`,
+`service`, `level`, `request_id`, `method`, `status`, and
+`duration_ms`, and the request ID echoed as the `X-Request-ID`
+response header (an inbound ID is propagated; otherwise one is
+minted at the demo, which is its own edge). Two adaptations keep
+the severity-1 rule intact: the logged path is the matched route
+template (or `<unmatched>`), never the raw path, and `user_id` is
+omitted because the demo has no authenticated user context.
+Metrics, traces, central log shipping, and propagation into worker
+job payloads remain production-only and are not implemented by the
+demo.
