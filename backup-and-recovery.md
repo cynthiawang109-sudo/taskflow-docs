@@ -29,7 +29,9 @@
 
 ## Out of scope
 
-- The demo implementation's SQLite file is fictional data on a
-  developer's own machine and is explicitly not backed up
+- The demo implementation's SQLite file is fictional data and is
+  explicitly not backed up - on a developer's own machine for local
+  runs, and on the host's ephemeral filesystem for the public hosted
+  demo, where it resets on every redeploy or restart
   (see `taskflow-api-docs`, `data-model.md`, "Demo implementation
   note").
