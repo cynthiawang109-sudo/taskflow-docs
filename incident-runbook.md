@@ -53,6 +53,44 @@ database (`TASKFLOW_DB_PATH`).
 4. Re-run the job (`scripts/run_digest.py --user <id> --week <week>`)
    and confirm the row lands on `sent`.
 
+## Worker queue recovery (demo store)
+
+The queue is the `jobs` table in the demo SQLite database
+(`TASKFLOW_DB_PATH`).
+
+1. Inspect jobs by status:
+   `SELECT id, kind, status, attempts, last_error, next_attempt_at FROM jobs ORDER BY status, id;`
+   To list only one status, add `WHERE status = 'running'` before
+   `ORDER BY` (substitute `queued`, `done`, or `dead` as needed).
+   `queued` means waiting for a worker, eligible once `next_attempt_at`
+   is due; `running` means claimed by a worker, possibly interrupted;
+   `done` means the handler completed; `dead` means the attempt limit
+   was reached and automatic retries have stopped. Check worker logs
+   for detail behind the sanitized exception class in `last_error`.
+2. For jobs left `running` by a worker that stopped, first confirm that
+   no other worker process is active. This is a hard prerequisite:
+   recovery must only run when no other worker process is active.
+   From the demo application directory, run `python scripts/run_worker.py`,
+   which calls `recover_interrupted` at startup. Recovery counts each
+   interruption as an attempt, sets `last_error` to `InterruptedError`,
+   and returns the row to `queued` with the normal backoff
+   (`min(2 ** attempts, 300)` seconds). At 5 attempts it marks the row
+   `dead` instead. The script drains only currently due jobs; run it
+   again after the backoff to process recovered rows, with the same
+   no-other-worker prerequisite.
+3. Before replaying a `weekly_digest` job, read its `payload` for the
+   `(user_id, week)` pair and check the digest ledger:
+   `SELECT user_id, week, status, attempts, last_error FROM digest_sends WHERE user_id = '<id>' AND week = '<week>';`
+   An already-recorded send (`status = 'sent'`) is skipped by the digest
+   handler, so replay does not double-send. If the ledger needs recovery,
+   follow the adjacent digest procedure, including its outbox check.
+4. Fix the underlying cause before resetting a dead job by hand. Prefer
+   this only for the local demo database. With workers stopped, reset
+   only the affected row:
+   `UPDATE jobs SET status = 'queued', attempts = 0, last_error = NULL, next_attempt_at = 0 WHERE id = <job_id> AND status = 'dead';`
+   Run `python scripts/run_worker.py` from the demo application directory
+   and inspect the row again to confirm the outcome.
+
 ## Suspected data leak in logs
 
 1. Stop the affected service's log shipping first, then rotate its tokens.
